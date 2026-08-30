@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="FlyRank ML Capstone research paper on CTR opportunity prioritization.">
+
+    <title>CTR Opportunity Prioritization | FlyRank ML Capstone</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fa;
+            color: #202124;
+            line-height: 1.7;
+        }
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 60px 20px 50px;
+        }
+
+        header .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .eyebrow {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            line-height: 1.15;
+            margin: 12px 0;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: #666;
+            max-width: 750px;
+        }
+
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        nav .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 14px 20px;
+            display: flex;
+            gap: 18px;
+            overflow-x: auto;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        section {
+            background: #ffffff;
+            margin: 28px 0;
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            margin-top: 30px;
+            font-size: 1.2rem;
+        }
+
+        p {
+            max-width: 850px;
+        }
+
+        .abstract {
+            font-size: 1.05rem;
+        }
+
+        .highlight {
+            background: #f3f4f6;
+            border-left: 4px solid #333;
+            padding: 18px 20px;
+            margin: 25px 0;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        .metric {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 22px;
+            background: #fafafa;
+        }
+
+        .metric-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .metric-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 22px 0;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            background: #f3f4f6;
+            font-weight: 700;
+        }
+
+        .artifact {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .artifact:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .chart {
+            margin: 25px 0;
+            padding: 25px;
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .bar-row {
+            margin: 16px 0;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .bar-track {
+            width: 100%;
+            height: 22px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            background: #555;
+            border-radius: 5px;
+        }
+
+        .recommendation {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .rank {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .confidence {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .demo-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .demo-time {
+            font-weight: 700;
+        }
+
+        .social-post {
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 25px;
+            white-space: normal;
+        }
+
+        footer {
+            background: #202124;
+            color: #ffffff;
+            padding: 45px 20px;
+            margin-top: 40px;
+        }
+
+        footer .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        footer a {
+            color: #ffffff;
+        }
+
+        @media (max-width: 700px) {
+
+            h1 {
+                font-size: 2.1rem;
+            }
+
+            section {
+                padding: 24px 18px;
+            }
+
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav .container {
+                gap: 12px;
+            }
+
+            table {
+                font-size: 0.88rem;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="container">
+
+        <div class="eyebrow">
+            FlyRank ML Capstone
+        </div>
+
+        <h1>
+            CTR Opportunity Prioritization
+        </h1>
+
+        <p class="subtitle">
+            A transparent decision-support workflow for identifying
+            content with potential search CTR opportunities.
+        </p>
+
+    </div>
+
+</header>
+
+
+<nav>
+
+    <div class="container">
+
+        <a href="#abstract">Abstract</a>
+        <a href="#question">Question</a>
+        <a href="#data">Data</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#results">Results</a>
+        <a href="#limitations">Limitations</a>
+        <a href="#recommendations">Recommendations</a>
+        <a href="#artifacts">Artifacts</a>
+        <a href="#acknowledgments">Acknowledgments</a>
+
+    </div>
+
+</nav>
+
+
+<main>
+
+
+<!-- ========================= -->
+<!-- ABSTRACT -->
+<!-- ========================= -->
+
+<section id="abstract">
+
+    <h2>Abstract</h2>
+
+    <p class="abstract">
+
+        This project investigates whether current search-performance
+        signals can be used to prioritize content with potential CTR
+        opportunities. Using anonymized FlyRank warehouse data,
+        I examined Google Search Console impressions, clicks, and
+        average search position and built a position-adjusted CTR
+        baseline that ranks pages with meaningful search visibility
+        but below-benchmark CTR. A Decision Tree model was then used
+        to reproduce this prioritization rule and evaluated using
+        both the original split and a client-grouped split. The model
+        achieved 98.9% accuracy and 96.76% macro F1 on the original
+        evaluation, and 99.79% accuracy and 98.24% macro F1 on the
+        client-grouped evaluation. These results show that the model
+        can reproduce the prioritization rule consistently across
+        held-out clients, but they should not be interpreted as proof
+        of future SEO performance because the target is derived from
+        the same current-period signals used as model inputs. The
+        final output is therefore best treated as a transparent
+        decision-support system for identifying pages that warrant
+        human review.
+
+    </p>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- QUESTION -->
+<!-- ========================= -->
+
+<section id="question">
+
+    <h2>1. Question</h2>
+
+    <h3>Research question</h3>
+
+    <p>
+        Can current search-performance signals be used to prioritize
+        content that shows a measurable CTR opportunity, while
+        avoiding a simple global CTR threshold?
+    </p>
+
+    <h3>Decision supported</h3>
+
+    <p>
+        The goal is to produce a ranked review queue for content
+        teams. The queue highlights pages with meaningful search
+        visibility and CTR that is weak relative to their observed
+        search position.
+    </p>
+
+    <div class="highlight">
+
+        This is a decision-support problem, not a claim that the
+        model predicts future traffic or that changing a page will
+        cause improvement.
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- DATA -->
+<!-- ========================= -->
+
+<section id="data">
+
+    <h2>2. Data</h2>
+
+    <p>
+        I used the public-safe FlyRank internship warehouse release
+        and worked primarily with Google Search Console performance
+        data.
+    </p>
+
+    <p>
+        The baseline analysis used the March 2026 reporting window.
+        The analysis required usable GSC data, positive impressions,
+        and a non-null average search position.
+    </p>
+
+    <p>
+        Rows without usable GSC data were excluded because CTR and
+        position-based opportunity could not be measured reliably
+        for those rows.
+    </p>
+
+    <p>
+        Client and content identifiers were retained only for grouping
+        and validation. They were not used as model features.
+    </p>
+
+    <div class="highlight">
+
+        The final month was treated as a sealed evaluation period
+        rather than being used to develop the label logic.
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- METHODOLOGY -->
+<!-- ========================= -->
+
+<section id="methodology">
+
+    <h2>3. Methodology</h2>
+
+    <h3>Features</h3>
+
+    <p>
+        The final model uses three current-period search signals:
+    </p>
+
+    <ul>
+        <li><code>gsc_impressions</code></li>
+        <li><code>gsc_clicks</code></li>
+        <li><code>gsc_avg_position</code></li>
+    </ul>
+
+    <p>
+        CTR is calculated as clicks divided by impressions.
+    </p>
+
+
+    <h3>Baseline</h3>
+
+    <p>
+        The baseline divides pages into four position groups:
+        1–3, 4–10, 11–20, and 21+. An observed CTR benchmark is
+        calculated for each group.
+    </p>
+
+    <p>
+        A row receives higher priority when its CTR is below the
+        benchmark for its position and it has meaningful impression
+        volume.
+    </p>
+
+
+    <h3>Model</h3>
+
+    <p>
+        A Decision Tree classifier was used to reproduce the
+        prioritization rule. The model uses impressions, clicks,
+        and average position as its features.
+    </p>
+
+
+    <h3>Validation</h3>
+
+    <p>
+        The model was evaluated using the original evaluation design
+        and a client-grouped split. In the grouped evaluation, the
+        same client could not appear in both training and test data.
+    </p>
+
+
+    <h3>Leakage checks</h3>
+
+    <p>
+        Client and content identifiers were excluded from model
+        features. Target-derived fields such as scores, reason codes,
+        actions, and label fields were also excluded.
+    </p>
+
+    <div class="highlight">
+
+        Because the target is derived from the same current-period
+        signals supplied to the model, the model should be understood
+        as reproducing the prioritization rule rather than independently
+        predicting a future outcome.
+
+    </div>
+
+
+    <h3>Implementation</h3>
+
+    <p>
+        The analysis was implemented in Python using a reproducible
+        notebook workflow. The complete technical workflow, including
+        data checks, model training, validation, and chart generation,
+        is provided in the accompanying Capstone notebook.
+    </p>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- RESULTS -->
+<!-- ========================= -->
+
+<section id="results">
+
+    <h2>4. Results vs Baseline</h2>
+
+    <p>
+        The model reproduced the baseline classification with high
+        measured accuracy under both evaluation designs.
+    </p>
+
+
+    <div class="metric-grid">
+
+        <div class="metric">
+
+            <div class="metric-number">
+                98.90%
+            </div>
+
+            <div class="metric-label">
+                Original split accuracy
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-number">
+                99.79%
+            </div>
+
+            <div class="metric-label">
+                Client-grouped accuracy
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-number">
+                96.76%
+            </div>
+
+            <div class="metric-label">
+                Original split Macro F1
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-number">
+                98.24%
+            </div>
+
+            <div class="metric-label">
+                Client-grouped Macro F1
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <h3>Model validation table</h3>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Validation</th>
+                <th>Accuracy</th>
+                <th>Macro F1</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>Original split</td>
+                <td>98.90%</td>
+                <td>96.76%</td>
+            </tr>
+
+            <tr>
+                <td>Client-grouped</td>
+                <td>99.79%</td>
+                <td>98.24%</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <div class="chart">
+
+    <img
+        src="../outputs/charts/model_validation.png"
+        alt="Model validation comparison"
+        style="width:100%; height:auto;"
+    >
+
+    </div>
+
+
+    <h3>Validation comparison</h3>
+
+    <div class="chart">
+
+        <div class="bar-row">
+
+            <div class="bar-label">
+                <span>Original — Accuracy</span>
+                <span>98.90%</span>
+            </div>
+
+            <div class="bar-track">
+                <div class="bar" style="width: 98.9%;"></div>
+            </div>
+
+        </div>
+
+
+        <div class="bar-row">
+
+            <div class="bar-label">
+                <span>Client-grouped — Accuracy</span>
+                <span>99.79%</span>
+            </div>
+
+            <div class="bar-track">
+                <div class="bar" style="width: 99.79%;"></div>
+            </div>
+
+        </div>
+
+
+        <div class="bar-row">
+
+            <div class="bar-label">
+                <span>Original — Macro F1</span>
+                <span>96.76%</span>
+            </div>
+
+            <div class="bar-track">
+                <div class="bar" style="width: 96.76%;"></div>
+            </div>
+
+        </div>
+
+
+        <div class="bar-row">
+
+            <div class="bar-label">
+                <span>Client-grouped — Macro F1</span>
+                <span>98.24%</span>
+            </div>
+
+            <div class="bar-track">
+                <div class="bar" style="width: 98.24%;"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="highlight">
+
+        These results show that the model can reproduce the
+        prioritization rule consistently across held-out clients.
+        They do not show that the model can predict future traffic,
+        rankings, or organic growth.
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- LIMITATIONS -->
+<!-- ========================= -->
+
+<section id="limitations">
+
+    <h2>5. Limitations</h2>
+
+    <ol>
+
+        <li>
+            The target is derived from the same search-performance
+            signals used as model inputs. Therefore, the high
+            classification scores mainly show that the model can
+            reproduce the prioritization rule.
+        </li>
+
+        <li>
+            The analysis does not establish causality. A low CTR does
+            not prove that a content change will increase clicks.
+        </li>
+
+        <li>
+            Impression volume is an opportunity signal, not evidence
+            that an intervention will succeed.
+        </li>
+
+        <li>
+            Zero CTR observations may reflect measurement, rounding,
+            tracking, or incomplete reporting issues.
+        </li>
+
+        <li>
+            The available performance table did not provide a direct
+            content-age field for the baseline, so content freshness
+            could not be tested as an independent feature.
+        </li>
+
+        <li>
+            The grouped evaluation uses held-out clients, but it is
+            still based on a limited evaluation setup and should not
+            be treated as proof of production performance.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- RECOMMENDATIONS -->
+<!-- ========================= -->
+
+<section id="recommendations">
+
+    <h2>6. Ranked Recommendations</h2>
+
+    <p>
+        The ranked queue should be used as a review list rather than
+        an automatic instruction to change content.
+    </p>
+
+
+    <div class="recommendation">
+
+        <div class="rank">
+            1. Review high-visibility pages with below-benchmark CTR
+        </div>
+
+        <p>
+            Start with pages that have meaningful impressions and CTR
+            below the benchmark for their position group.
+        </p>
+
+    </div>
+
+
+    <div class="recommendation">
+
+        <div class="rank">
+            2. Validate the measurement
+        </div>
+
+        <p>
+            Check whether zero or unusually low CTR values are genuine
+            before taking action.
+        </p>
+
+    </div>
+
+
+    <div class="recommendation">
+
+        <div class="rank">
+            3. Review title and snippet relevance
+        </div>
+
+        <p>
+            Where the CTR signal is reliable, review whether the
+            search-result title and snippet clearly match search
+            intent and page content.
+        </p>
+
+    </div>
+
+
+    <div class="recommendation">
+
+        <div class="rank">
+            4. Prioritize higher-volume opportunities
+        </div>
+
+        <p>
+            When several pages show similar CTR gaps, give earlier
+            review to pages with greater impression volume.
+        </p>
+
+    </div>
+
+
+    <div class="recommendation">
+
+        <div class="rank">
+            5. Re-measure after intervention
+        </div>
+
+        <p>
+            Any content change should be followed by a new measurement
+            window. The ranking itself should not be treated as evidence
+            that an intervention caused improvement.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- ARTIFACTS -->
+<!-- ========================= -->
+
+<section id="artifacts">
+
+    <h2>7. Artifacts the Paper Embeds</h2>
+
+    <p>
+        The following artifacts summarize the main evidence used by
+        the analysis and provide a compact view of the decision-support
+        workflow.
+    </p>
+
+
+    <!-- Artifact 1 -->
+
+    <div class="artifact">
+
+        <h3>Artifact 1 — CTR by Position Bucket</h3>
+
+        <p>
+            Observed CTR varies by search-position bucket, supporting
+            the use of position-adjusted benchmarks rather than one
+            global CTR threshold.
+        </p>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Position</th>
+                    <th>Observed CTR</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>1–3</td>
+                    <td>0.003814</td>
+                </tr>
+
+                <tr>
+                    <td>4–10</td>
+                    <td>0.003041</td>
+                </tr>
+
+                <tr>
+                    <td>11–20</td>
+                    <td>0.003056</td>
+                </tr>
+
+                <tr>
+                    <td>21+</td>
+                    <td>0.001262</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="chart">
+
+            <div class="bar-row">
+
+                <div class="bar-label">
+                    <span>1–3</span>
+                    <span>0.003814</span>
+                </div>
+
+                <div class="bar-track">
+                    <div class="bar" style="width: 100%;"></div>
+                </div>
+
+            </div>
+
+
+            <div class="bar-row">
+
+                <div class="bar-label">
+                    <span>4–10</span>
+                    <span>0.003041</span>
+                </div>
+
+                <div class="bar-track">
+                    <div class="bar" style="width: 79.7%;"></div>
+                </div>
+
+            </div>
+
+
+            <div class="bar-row">
+
+                <div class="bar-label">
+                    <span>11–20</span>
+                    <span>0.003056</span>
+                </div>
+
+                <div class="bar-track">
+                    <div class="bar" style="width: 80.1%;"></div>
+                </div>
+
+            </div>
+
+
+            <div class="bar-row">
+
+                <div class="bar-label">
+                    <span>21+</span>
+                    <span>0.001262</span>
+                </div>
+
+                <div class="bar-track">
+                    <div class="bar" style="width: 33.1%;"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Artifact 2 -->
+
+    <div class="artifact">
+
+        <h3>Artifact 2 — Impression-Volume Buckets</h3>
+
+        <p>
+            Impression volume helps distinguish low-visibility rows
+            from pages with larger observed search exposure.
+        </p>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Impression bucket</th>
+                    <th>Total impressions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>&lt;10</td>
+                    <td>535,373,900</td>
+                </tr>
+
+                <tr>
+                    <td>10–99</td>
+                    <td>548,147,670</td>
+                </tr>
+
+                <tr>
+                    <td>100–999</td>
+                    <td>1,616,094,300</td>
+                </tr>
+
+                <tr>
+                    <td>1000+</td>
+                    <td>588,796,530</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- Artifact 3 -->
+
+    <div class="artifact">
+
+        <h3>Artifact 3 — Model Validation</h3>
+
+        <p>
+            The same model was compared under the original and
+            client-grouped evaluation designs.
+        </p>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Validation</th>
+                    <th>Accuracy</th>
+                    <th>Macro F1</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Original split</td>
+                    <td>98.90%</td>
+                    <td>96.76%</td>
+                </tr>
+
+                <tr>
+                    <td>Client-grouped</td>
+                    <td>99.79%</td>
+                    <td>98.24%</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- Artifact 4 -->
+
+    <div class="artifact">
+
+        <h3>Artifact 4 — Top Recommendation Queue</h3>
+
+        <p>
+            A public-safe representation of the highest-ranked review
+            recommendations is shown below. Identifiers are intentionally
+            omitted.
+        </p>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Rank</th>
+                    <th>Action</th>
+                    <th>Reason</th>
+                    <th>Confidence</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>1</td>
+                    <td>Prioritize review</td>
+                    <td>Below-position CTR / zero CTR</td>
+                    <td>Medium</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>Prioritize review</td>
+                    <td>Below-position CTR / zero CTR</td>
+                    <td>Medium</td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>Prioritize review</td>
+                    <td>Below-position CTR / zero CTR</td>
+                    <td>Medium</td>
+                </tr>
+
+                <tr>
+                    <td>4</td>
+                    <td>Prioritize review</td>
+                    <td>Below-position CTR / zero CTR</td>
+                    <td>Medium</td>
+                </tr>
+
+                <tr>
+                    <td>5</td>
+                    <td>Prioritize review</td>
+                    <td>Below-position CTR / zero CTR</td>
+                    <td>Medium</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- ACKNOWLEDGMENTS -->
+<!-- ========================= -->
+
+<section id="acknowledgments">
+
+    <h2>8. Acknowledgments &amp; Data Credit</h2>
+
+    <p>
+        This work was completed as part of the FlyRank ML internship.
+        The analysis uses the public-safe FlyRank internship warehouse
+        provided for the program. Data and methodology are used for
+        educational and decision-support purposes.
+    </p>
+
+    <p>
+        Data credit:
+        <a href="https://flyrank.ai"
+           target="_blank"
+           rel="noopener noreferrer">
+            FlyRank
+        </a>
+    </p>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- ML-12 -->
+<!-- ========================= -->
+
+<section>
+
+    <h2>ML-12 — 5-Minute Demo Outline</h2>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            0:00–0:40 — Problem &amp; Research Question
+        </div>
+
+        <p>
+            Introduce the research question: whether current
+            search-performance signals can be used to prioritize
+            content with potential CTR opportunities. Explain that
+            the goal is decision support rather than predicting
+            future SEO performance.
+        </p>
+
+    </div>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            0:40–1:20 — Data
+        </div>
+
+        <p>
+            Show the anonymized FlyRank warehouse data used for the
+            analysis. Explain the March 2026 analysis window and the
+            main GSC fields: impressions, clicks, and average position.
+        </p>
+
+    </div>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            1:20–2:10 — Methodology
+        </div>
+
+        <p>
+            Explain the position-adjusted CTR baseline. Show the four
+            position buckets and explain how CTR benchmarks and
+            impression volume were used to prioritize pages.
+        </p>
+
+    </div>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            2:10–3:10 — Model &amp; Results
+        </div>
+
+        <p>
+            Show the Decision Tree features and the validation results.
+            Compare the original evaluation with the client-grouped
+            evaluation.
+        </p>
+
+    </div>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            3:10–4:10 — Ranked Recommendations
+        </div>
+
+        <p>
+            Show the ranked action queue and explain how high-visibility
+            pages with below-benchmark CTR are prioritized for human
+            review.
+        </p>
+
+    </div>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            4:10–4:40 — Limitations
+        </div>
+
+        <p>
+            Explain that the target is derived from the same
+            current-period signals used as model features, so the high
+            scores demonstrate rule reproduction rather than
+            independent future prediction. Also explain that the
+            analysis does not establish causality.
+        </p>
+
+    </div>
+
+
+    <div class="demo-item">
+
+        <div class="demo-time">
+            4:40–5:00 — Takeaway
+        </div>
+
+        <p>
+            Conclude that the workflow provides a transparent,
+            interpretable decision-support system for prioritizing
+            potential CTR opportunities.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- SOCIAL POST -->
+<!-- ========================= -->
+
+<section>
+
+    <h2>ML-12 — Social-Post Cut</h2>
+
+    <div class="social-post">
+
+        <p>
+            I built a decision-support workflow for my FlyRank ML
+            Capstone to identify potential CTR opportunities in search
+            performance data.
+        </p>
+
+        <p>
+            I used anonymized Google Search Console signals —
+            impressions, clicks, and average position — to build a
+            position-adjusted baseline and a simple Decision Tree model.
+        </p>
+
+        <p>
+            The model reproduced the prioritization rule with 98.9%
+            accuracy on the original evaluation and 99.79% accuracy
+            under a client-grouped evaluation.
+        </p>
+
+        <p>
+            The most important lesson was methodological: a high model
+            score does not automatically mean strong future prediction
+            when the target is derived from the same signals used as
+            features.
+        </p>
+
+        <p>
+            The final output is a ranked review queue that helps
+            prioritize pages for human investigation rather than
+            automatically recommending changes.
+        </p>
+
+        <p>
+            #MachineLearning #DataScience #SEO #Python #FlyRank
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- EMPLOYER SUMMARY -->
+<!-- ========================= -->
+
+<section>
+
+    <h2>ML-12 — Employer-Facing Summary</h2>
+
+    <p>
+        I built an interpretable machine-learning workflow that uses
+        Google Search Console signals to prioritize content with
+        potential CTR opportunities. I developed a position-adjusted
+        baseline, trained a Decision Tree to reproduce the
+        prioritization rule, and evaluated it using both a standard
+        split and a client-grouped validation design. The project
+        strengthened my ability to connect data analysis, machine
+        learning, leakage checking, validation, and practical
+        recommendations into an end-to-end decision-support workflow.
+    </p>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        <h2>FlyRank ML Capstone</h2>
+
+        <p>
+            This research paper presents an educational,
+            public-safe machine-learning analysis focused on
+            decision support for search-performance review.
+        </p>
+
+        <p>
+            Data credit:
+            <a href="https://flyrank.ai"
+               target="_blank"
+               rel="noopener noreferrer">
+                FlyRank
+            </a>
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>
