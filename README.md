@@ -547,7 +547,12 @@ The portfolio presents my projects, skills, and professional work.
 # ⏱️ Internship Hours
 
 The FlyRank portal currently records 146 estimated hours, including completed assignments, an attended event/recording, and a verified Anthropic Academy course.
+Broken down as:
 
+142.5 hours — assignments
+1.5 hours — event/recording
+2 hours — Anthropic Academy course
+0 hours currently — capstone because it is still in review
 Capstone hours remain pending until the capstone is accepted through the FlyRank review process.
 
 # 📢 Build-in-Public Post
@@ -618,6 +623,11 @@ This repository contains the complete final submission for my FlyRank ML Interns
 * **Hours Log:** Completed in the FlyRank portal with 146 hours + Capstone hours remain pending until the capstone is accepted through the FlyRank review process.
 * **Personal Site:** Published on the required FlyRank domain
 * **Final Review:** Submitted for human review and sign-off
+
+### 🤖 AI Transparency
+
+I used AI tools, including Claude and ChatGPT, as development and thinking partners during this project. They helped me with code suggestions, debugging, documentation, brainstorming, and refining the natural-language agent. I personally reviewed, tested, and validated the implementation, model results, outputs, and project claims before including them in the final submission.
+
 
 
 ## FlyRank ML Internship
