@@ -1,34 +1,33 @@
 # FlyRank ML Internship — Applied Search Intelligence
 
-## Google Search Ranking & Content Refresh Prioritization
+## CTR Opportunity Prioritization
 
-A machine-learning project that turns anonymized Google Search performance data into a **ranked content-refresh queue**, helping SEO and content teams identify which pages deserve attention first.
+A machine-learning project that uses anonymized FlyRank Google Search performance data to identify and prioritize pages with potential click-through-rate (CTR) opportunities.
 
-The project follows a complete ML workflow:
+The project follows a reproducible search-intelligence workflow:
 
 **problem framing → data understanding → feature engineering → baseline → model training → validation → ranking → actionable recommendations**
 
-For V2, the project adds a **natural-language agent layer** that makes the generated ranking outputs easier to explore and understand through ordinary questions.
+For V2, the project adds a natural-language agent layer that makes the generated ranking outputs easier to explore and understand through ordinary questions.
 
 ---
 
-## 🎯 The Problem
+# 🎯 The Problem
 
-SEO and content teams can have thousands of pages competing for limited optimization time.
+Search and content teams may have many pages that receive search impressions but do not capture clicks at the same rate as other visible pages.
 
-The practical question is not simply:
+The practical question is:
 
-> "Which pages perform badly?"
+> **"Which pages should we investigate first for potential CTR improvement?"**
 
-It is:
+This project treats CTR opportunity prioritization as a ranking and decision-support problem.
 
-> **"Which pages should we review and refresh first?"**
+Rather than attempting to predict Google's ranking algorithm or guarantee future traffic gains, the workflow identifies pages that appear to have potential click-capture opportunities based on the available search-performance signals.
 
-This project treats content refresh prioritization as a ranking/decision-support problem.
+The goal is to help an SEO or content team decide where to focus investigation first.
 
-Instead of manually inspecting pages one by one, the workflow uses search-performance signals to generate a prioritized review queue.
+The system is designed to support human decision-making — not replace SEO judgment or claim causal impact from a recommended change.
 
-The system is designed to support human decision-making — not to replace SEO judgment or claim to predict Google's algorithm.
 
 ---
 
@@ -36,81 +35,88 @@ The system is designed to support human decision-making — not to replace SEO j
 
 The project contains a reproducible machine-learning workflow that:
 
-1. Loads anonymized FlyRank search data.
-2. Cleans and prepares the available signals.
-3. Builds a feature representation for content opportunities.
-4. Creates a transparent baseline scoring rule.
-5. Trains machine-learning models.
-6. Evaluates the models using ranking-oriented metrics.
-7. Produces a ranked content-refresh queue.
-8. Exports results for further analysis and review.
-9. Adds a V2 natural-language interface for querying the generated outputs.
+1. Loads anonymized FlyRank Google Search performance data.
+2. Prepares the available search-performance signals.
+3. Builds features related to visibility and click-through performance.
+4. Creates a transparent baseline for identifying CTR opportunities.
+5. Trains a machine-learning model to rank opportunity candidates.
+6. Evaluates the learned model against the baseline.
+7. Produces a ranked CTR opportunity queue.
+8. Exports the results for analysis and human review.
+9. Adds a V2 natural-language agent for exploring the generated outputs.
 
-The final output is a practical **content refresh prioritization system**.
+The final output is a practical **CTR opportunity prioritization system**.
+
+The recommendations are intended as investigation priorities. They do not guarantee that changing a page will increase its future CTR or search performance.
+
 
 ---
 
 # 📊 Key Result
 
-The project compares a simple hand-written baseline against the learned model.
+The project compares a transparent baseline against a learned Decision Tree model for prioritizing CTR opportunities.
 
-On the bundled evaluation workflow:
+The evaluation uses Precision@50 to answer the practical question:
 
-| Approach      | Precision@50 |
-| ------------- | -----------: |
-| Baseline rule |       ≈ 0.24 |
-| Learned model |       ≈ 0.74 |
+> **"If the team can only investigate the top 50 pages, how many of those pages are identified as relevant opportunities?"**
 
-The exact model score can vary slightly depending on the environment and library versions.
+The model substantially improves the ranking of the selected opportunity class compared with the baseline on the evaluation split.
 
-The important finding is the substantial improvement in the ability to identify relevant pages near the top of the review queue.
+The exact results, evaluation design, and charts are presented in the deployed research paper.
 
 ### What this means
 
-The model is not simply producing a prediction for every page.
+The model should not be interpreted as a causal predictor of future CTR.
 
-It is being evaluated according to the practical question:
+The result demonstrates that the learned ranking approach can prioritize the defined opportunity signal more effectively than the baseline on the evaluated data.
 
-> **"If the team only has time to review the top 50 pages, how many of those pages are actually useful opportunities?"**
-
-That makes Precision@50 a useful metric for this decision-support task.
+This is therefore a **decision-support result**, not evidence that the model can predict Google's future rankings or guarantee improvements after a content change.
 
 ---
 
 # 🧠 Machine-Learning Workflow
 
-The project follows a transparent pipeline:
+The project follows a transparent CTR opportunity-ranking pipeline:
 
 ```text
-                    FlyRank Search Data
-                            │
-                            ▼
-                  Data Preparation
-                            │
-                            ▼
-                  Feature Engineering
-                            │
-                            ▼
-                  Baseline Scoring
-                            │
-                            ▼
-                   Model Training
-                            │
-                            ▼
-                     Evaluation
-                            │
-                            ▼
-                 Ranked Opportunities
-                            │
-                            ▼
-                Content Refresh Queue
-                            │
-                            ▼
+                 FlyRank Search Data
+                         │
+                         ▼
+                 Data Preparation
+                         │
+                         ▼
+                 Feature Engineering
+                         │
+                         ▼
+                  CTR Baseline
+                         │
+                         ▼
+                  Model Training
+                         │
+                         ▼
+                    Validation
+                         │
+                         ▼
+              Ranked CTR Opportunities
+                         │
+                         ▼
+               Opportunity Queue
+                         │
+                         ▼
              V2 Natural-Language Agent
-                            │
-                            ▼
-                    Human Decision
+                         │
+                         ▼
+                 Human Decision
 ```
+
+The analytical pipeline generates the evidence and ranking.
+
+The conversational layer sits on top of those outputs and makes them easier to explore.
+
+The system therefore separates:
+
+**data and ML analysis → ranked evidence → natural-language exploration → human review**
+
 
 The important design principle is that the conversational layer sits **on top of the analytical workflow**.
 
@@ -152,16 +158,16 @@ The overall workflow is:
 
 # 🤖 V2 — Natural-Language Agent
 
-V2 adds a natural-language interaction layer over the existing ML outputs.
+V2 adds a natural-language interaction layer over the CTR opportunity-ranking outputs.
 
 Instead of manually opening the generated CSV and searching through rows, a user can ask questions such as:
 
 ```text
-What are the top content opportunities?
+What are the top CTR opportunities?
 ```
 
 ```text
-Which pages should we refresh first?
+Which pages should we investigate first?
 ```
 
 ```text
@@ -169,10 +175,10 @@ Explain the highest-priority opportunities.
 ```
 
 ```text
-What does the ranked refresh queue contain?
+What does the ranked opportunity queue contain?
 ```
 
-The goal of the agent is to make the analytical results more accessible to a non-technical user.
+The goal is to make the analytical results easier for a non-technical SEO or content user to explore.
 
 ### Important design choice
 
@@ -183,16 +189,17 @@ The architecture remains:
 ```text
 Search data
     ↓
-ML pipeline
+CTR analysis / ML pipeline
     ↓
-Ranked output
+Ranked opportunity output
     ↓
-Agent
+Natural-language agent
     ↓
-Natural-language answer
+Human-readable answer
 ```
 
 This keeps the underlying analysis reproducible and allows the generated results to be inspected independently of the conversational interface.
+
 
 ---
 
@@ -350,21 +357,17 @@ The initial notebooks can also be opened and executed through Google Colab.
 
 ---
 
-# 📈 Ranked Refresh Queue
+# 📈 Ranked CTR Opportunity Queue
 
-One of the main outputs is:
+One of the main outputs of the project is:
 
 ```text
 outputs/refresh_queue_sample.csv
 ```
 
-The sample contains:
+The generated output contains ranked opportunity records that can be reviewed by an SEO or content team.
 
-```text
-200 rows × 28 columns
-```
-
-Important ranking fields include:
+The queue includes ranking fields such as:
 
 ```text
 final_rank
@@ -373,35 +376,30 @@ content_id
 
 along with the feature and scoring information used to describe each opportunity.
 
-The purpose of this output is to transform model results into a practical queue that can be reviewed by an SEO or content team.
+The purpose of the queue is not to prescribe a guaranteed content change. It provides a prioritized list of pages that deserve further investigation for potential CTR improvement.
+
+A high-ranked page is therefore an **opportunity for human review**, not a guaranteed optimization target.
+
 
 ---
 
 # 🧪 Evaluation Philosophy
 
-The project emphasizes evaluation based on the **actual decision the system is intended to support**.
+The project evaluates the system according to the decision it is intended to support:
 
-Rather than focusing only on generic classification metrics, the workflow asks:
+> **If a team can only investigate a limited number of pages, does the model place relevant CTR opportunities near the top of the queue?**
 
-> If a team can only review a limited number of pages, does the model put useful opportunities near the top?
+For this reason, ranking-oriented evaluation such as **Precision@50** is used.
 
-This is why ranking-oriented evaluation such as **Precision@50** is important.
+The learned model is compared against a transparent baseline on the same evaluation setup.
 
-The project also compares the learned model against a transparent baseline.
+The important distinction is that the evaluation measures prioritization of the defined opportunity signal. It does not establish that a recommended page change will cause future CTR improvement.
 
-This provides a useful sanity check:
+The results should therefore be interpreted as:
 
-```text
-Simple rule
-    ↓
-How well does it prioritize?
+**observed → measured → directional → decision-support**
 
-ML model
-    ↓
-Does learning improve the prioritization?
-```
-
-The model is valuable only if it improves the decision being supported.
+rather than as a causal or guaranteed SEO prediction.
 
 ---
 
@@ -436,21 +434,23 @@ The project does **not** claim to predict Google's ranking algorithm.
 
 # ⚠️ Limitations
 
-This system is a **decision-support tool**, not an autonomous SEO system.
+This system is a **CTR opportunity decision-support tool**, not an autonomous SEO system.
 
-A high-ranked page is an opportunity for human review, not a guarantee that changing the page will improve its future search performance.
+A highly ranked page represents an opportunity for human investigation. It does not guarantee that changing the page will improve future CTR, traffic, rankings, or conversions.
 
-There are several important limitations:
+Important limitations include:
 
-1. Search performance can change for many reasons outside the modeled features.
-2. Historical relationships do not guarantee future outcomes.
-3. The ranked queue depends on the quality and availability of the underlying data.
-4. The natural-language agent depends on the generated project outputs being available and up to date.
-5. Human SEO judgment is still required before making content changes.
+1. The opportunity definition is based on the available search-performance signals and therefore depends on the assumptions used to construct the target.
+2. Historical relationships do not guarantee future performance.
+3. Search performance can change because of factors outside the modeled features.
+4. The available dataset represents a particular observation window and may not generalize to every site or future period.
+5. The natural-language agent depends on the generated analytical outputs being available and up to date.
+6. Human SEO judgment is still required before making or prioritizing actual content changes.
+7. The evaluation demonstrates prioritization performance on the defined evaluation data; it does not establish causal CTR improvement.
 
 The model therefore answers:
 
-> **"Which pages should we investigate first?"**
+> **"Which pages should we investigate first for potential CTR opportunity?"**
 
 rather than:
 
@@ -463,27 +463,31 @@ rather than:
 Potential V3 improvements include:
 
 * connecting the agent to live search-performance data
-* adding richer explanations for individual rankings
+* adding richer explanations for individual CTR opportunity rankings
 * adding confidence or uncertainty indicators
-* comparing performance before and after content refreshes
-* tracking whether recommended refreshes produce measurable gains
-* supporting more complex natural-language analytical questions
+* evaluating recommendations against future search-performance windows
+* tracking whether investigated pages subsequently experience measurable changes
+* adding human-review feedback to the prioritization workflow
+* supporting richer natural-language analytical questions
 * adding a lightweight web dashboard
-* introducing feedback from human reviewers into the prioritization workflow
 
-The most valuable next step would be closing the loop:
+The most valuable next step would be closing the measurement loop:
 
 ```text
-Recommendation
-      ↓
-Content refresh
-      ↓
+CTR opportunity identified
+          ↓
+Human investigation
+          ↓
+Content / metadata decision
+          ↓
 Future search performance
-      ↓
-Measure outcome
-      ↓
+          ↓
+Measure observed change
+          ↓
 Improve prioritization
 ```
+
+This would help distinguish simple opportunity ranking from evidence about what happens after an intervention.
 
 ---
 
@@ -493,9 +497,7 @@ The capstone research paper is the deeper explanation of the project's research 
 
 The paper URL is maintained in:
 
-```text
-submission/paper_url.txt
-```
+Live paper: https://quratulainazhar22.github.io/flyrank-ml-work/
 
 ---
 
@@ -600,7 +602,7 @@ This repository contains the complete final submission for my FlyRank ML Interns
 ### Project
 
 * **Research Paper:** `submission/paper_url.txt`
-* **Capstone:** End-to-end applied Search Intelligence project
+* **Capstone:** CTR Opportunity Prioritization using anonymized FlyRank Google Search performance data
 * **Ranked Refresh Queue:** `outputs/refresh_queue_sample.csv`
 * **Model Report:** `outputs/model_report.md`
 * **V2 Natural-Language Agent:** Natural-language interface over the generated ranking outputs
@@ -611,6 +613,8 @@ This repository contains the complete final submission for my FlyRank ML Interns
 * **Demo Video:** https://youtu.be/ffVSCyl3M94
 
 ### Final Reflection
+* **Research Paper:**
+https://quratulainazhar22.github.io/flyrank-ml-work/
 
 * **Retrospective:** 500–800 word reflection on the project, changes in approach, lessons learned, and future direction
 
@@ -624,11 +628,15 @@ This repository contains the complete final submission for my FlyRank ML Interns
 * **Personal Site:** Published on the required FlyRank domain
 * **Final Review:** Submitted for human review and sign-off
 
-### 🤖 AI Transparency
+# 🤖 AI Transparency
 
-I used AI tools, including Claude and ChatGPT, as development and thinking partners during this project. They helped me with code suggestions, debugging, documentation, brainstorming, and refining the natural-language agent. I personally reviewed, tested, and validated the implementation, model results, outputs, and project claims before including them in the final submission.
+I used AI tools, including Claude and ChatGPT, as development and thinking partners during this project. They helped with code suggestions, debugging, documentation, brainstorming, and refining the natural-language agent.
 
+I personally reviewed, tested, and validated the implementation, model workflow, evaluation outputs, documentation, and project claims before including them in the final submission.
 
+AI was used as an assistance and reasoning tool; the final project structure, validation decisions, outputs, and interpretation were reviewed by me.
+
+---
 
 ## FlyRank ML Internship
 
