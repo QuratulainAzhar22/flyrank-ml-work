@@ -201,6 +201,7 @@ This keeps the underlying analysis reproducible and allows the generated results
 ```text
 flyrank-ml-work/
 │
+├── retrospective.md
 ├── README.md
 ├── requirements.txt
 │
@@ -526,6 +527,30 @@ and finally:
 ```
 
 ---
+# 📝 Retrospective
+
+500–800 word retrospective: retrospective.md
+
+The retrospective explains what I set out to build, how the project evolved, what I would build next, and the three most transferable lessons from the internship.
+
+
+# 🌐 Personal Portfolio
+
+Live portfolio: https://quratulainazhar22.github.io/
+
+The portfolio presents my projects, skills, and professional work.
+
+# ⏱️ Internship Hours
+
+The FlyRank portal currently records 146 estimated hours, including completed assignments, an attended event/recording, and a verified Anthropic Academy course.
+
+Capstone hours remain pending until the capstone is accepted through the FlyRank review process.
+
+# 📢 Build-in-Public Post
+
+Public project post: http://youtube.com/post/Ugkxs5K5A8sHOMR8HBLGcnfLBy-YmYkWYPYy
+
+The post shares the project journey, including a real design decision and an important limitation of the system.
 
 # 🏁 Final Takeaway
 
@@ -586,7 +611,7 @@ This repository contains the complete final submission for my FlyRank ML Interns
 
 ### Final Administrative Deliverables
 
-* **Hours Log:** Completed in the FlyRank portal
+* **Hours Log:** Completed in the FlyRank portal 146 hours
 * **Personal Site:** Published on the required FlyRank domain
 * **Final Review:** Submitted for human review and sign-off
 
