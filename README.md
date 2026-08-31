@@ -201,16 +201,12 @@ This keeps the underlying analysis reproducible and allows the generated results
 ```text
 flyrank-ml-work/
 │
-├── retrospective.md
 ├── README.md
+├── retrospective.md              
 ├── requirements.txt
 │
 ├── data/
-│   └── raw/
-│
 ├── docs/
-│   ├── ml-core-foundation-framework.md
-│   └── ml-intern-dataset-and-lane-guide.md
 │
 ├── notebooks/
 │   ├── 01_first_look_and_discovery.ipynb
@@ -230,16 +226,24 @@ flyrank-ml-work/
 │   ├── ml_utils.py
 │   └── run_all.py
 │
-├── skills/
-│   └── README.md
-│
 ├── submission/
 │   ├── README.md
 │   └── paper_url.txt
 │
 └── work/
     ├── README.md
-    └── capstone_report_template.md
+    ├── capstone_report_template.md
+    └── notebooks/
+        ├── capstone.ipynb
+        ├── w01_research_question.ipynb
+        ├── w02_ml_task_framing.ipynb
+        ├── w03_data_contract.ipynb
+        ├── w03_feature_leakage_check.ipynb
+        ├── w04_baseline_score.ipynb
+        ├── w04_signal_audit.ipynb
+        ├── w05_model.ipynb
+        ├── w06_validation_audit.ipynb
+        └── w07_action_playbook.ipynb
 ```
 
 ---
@@ -611,7 +615,7 @@ This repository contains the complete final submission for my FlyRank ML Interns
 
 ### Final Administrative Deliverables
 
-* **Hours Log:** Completed in the FlyRank portal 146 hours
+* **Hours Log:** Completed in the FlyRank portal with 146 hours + Capstone hours remain pending until the capstone is accepted through the FlyRank review process.
 * **Personal Site:** Published on the required FlyRank domain
 * **Final Review:** Submitted for human review and sign-off
 
