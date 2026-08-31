@@ -1,147 +1,567 @@
-# FlyRank ML Internship — Starter Repo
+# FlyRank ML Internship — Applied Search Intelligence
 
-**Applied Search Intelligence: Google Search Ranking & Discoverability**
+## Google Search Ranking & Content Refresh Prioritization
 
-This is the starting point for the FlyRank ML Internship. You **clone it into your own public
-repo** (one click — *Use this template*), build everything there, and submit that repo URL on
-each assignment in your portal — it's your workspace, your submission, and your portfolio all
-at once. The rhythm is simple: do the work, commit it, submit on the card. Done.
+A machine-learning project that turns anonymized Google Search performance data into a **ranked content-refresh queue**, helping SEO and content teams identify which pages deserve attention first.
 
-Everything here runs on a small **anonymized** slice of real FlyRank search data. No credentials,
-no private client data, no setup headaches.
+The project follows a complete ML workflow:
 
-> **New here?** Two reads: **[SETUP.md](SETUP.md)** (GitHub, Colab, and data access — ten
-> minutes, with every silent pitfall flagged), then **[GUIDE.md](GUIDE.md)** (every file
-> explained, what to edit vs. leave alone, and where your own work goes — five minutes).
+**problem framing → data understanding → feature engineering → baseline → model training → validation → ranking → actionable recommendations**
+
+For V2, the project adds a **natural-language agent layer** that makes the generated ranking outputs easier to explore and understand through ordinary questions.
 
 ---
 
-## Quickstart — first win in 2 minutes
+## 🎯 The Problem
 
-The fastest path is Google Colab (one click, zero install). Open Notebook 1 and run all cells:
+SEO and content teams can have thousands of pages competing for limited optimization time.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/notebooks/01_first_look_and_discovery.ipynb?flush_cache=true)
- **Week 1 — Run it, then discover a real truth yourself**
+The practical question is not simply:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/notebooks/02_your_first_readable_model.ipynb?flush_cache=true)
- **Week 2 — The model is just a rule you can read**
+> "Which pages perform badly?"
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/notebooks/03_working_with_the_full_release.ipynb?flush_cache=true)
- **Weeks 3+ — The full release (~79M rows) via DuckDB, no download needed** — hosted at
- [`FlyRank/internship-warehouse`](https://huggingface.co/datasets/FlyRank/internship-warehouse) (gated: request access + accept the data-use terms, approval is instant)
+It is:
+
+> **"Which pages should we review and refresh first?"**
+
+This project treats content refresh prioritization as a ranking/decision-support problem.
+
+Instead of manually inspecting pages one by one, the workflow uses search-performance signals to generate a prioritized review queue.
+
+The system is designed to support human decision-making — not to replace SEO judgment or claim to predict Google's algorithm.
 
 ---
 
-## Your assignment notebooks — open, fill, save, done
+# 🚀 What I Built
 
-Every assignment is one pre-named skeleton notebook in `work/notebooks/`. Click its badge,
-fill the sections in order, then **File → Save a copy in GitHub → OK** — the dialog is
-already pre-filled with your repo and the right path.
+The project contains a reproducible machine-learning workflow that:
 
-> **The badges know whose repo they're in.** About 30 seconds after you create your copy, an
-> automatic commit ("Point Colab badges at this copy") rewires every badge in it to open
-> **your** notebooks — with your saved work — instead of the shared read-only ones. Reading
-> this on the shared starter page? The badges below open blank previews; make your copy
-> first ([SETUP.md](SETUP.md), Moment 1).
+1. Loads anonymized FlyRank search data.
+2. Cleans and prepares the available signals.
+3. Builds a feature representation for content opportunities.
+4. Creates a transparent baseline scoring rule.
+5. Trains machine-learning models.
+6. Evaluates the models using ranking-oriented metrics.
+7. Produces a ranked content-refresh queue.
+8. Exports results for further analysis and review.
+9. Adds a V2 natural-language interface for querying the generated outputs.
 
-| Week | Card | Notebook | Open |
-|---|---|---|---|
-| 1 | ML-02 | `w01_research_question` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w01_research_question.ipynb?flush_cache=true) |
-| 2 | ML-03 | `w02_ml_task_framing` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w02_ml_task_framing.ipynb?flush_cache=true) |
-| 3 | ML-04 | `w03_data_contract` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w03_data_contract.ipynb?flush_cache=true) |
-| 3 | ML-05 | `w03_feature_leakage_check` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w03_feature_leakage_check.ipynb?flush_cache=true) |
-| 4 | ML-06 | `w04_signal_audit` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w04_signal_audit.ipynb?flush_cache=true) |
-| 4 | ML-07 | `w04_baseline_score` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w04_baseline_score.ipynb?flush_cache=true) |
-| 5 | ML-08 | `w05_model` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w05_model.ipynb?flush_cache=true) |
-| 6 | ML-09 | `w06_validation_audit` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w06_validation_audit.ipynb?flush_cache=true) |
-| 7 | ML-10 | `w07_action_playbook` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/w07_action_playbook.ipynb?flush_cache=true) |
-| 8 | ML-11 | `capstone` | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/work/notebooks/capstone.ipynb?flush_cache=true) |
+The final output is a practical **content refresh prioritization system**.
 
-Badges not opening *your* copy? Colab's built-in opener always works: **File → Open notebook
-→ GitHub tab** → paste `github.com/you/your-repo` → pick the notebook.
+---
 
-### Prefer local?
+# 📊 Key Result
+
+The project compares a simple hand-written baseline against the learned model.
+
+On the bundled evaluation workflow:
+
+| Approach      | Precision@50 |
+| ------------- | -----------: |
+| Baseline rule |       ≈ 0.24 |
+| Learned model |       ≈ 0.74 |
+
+The exact model score can vary slightly depending on the environment and library versions.
+
+The important finding is the substantial improvement in the ability to identify relevant pages near the top of the review queue.
+
+### What this means
+
+The model is not simply producing a prediction for every page.
+
+It is being evaluated according to the practical question:
+
+> **"If the team only has time to review the top 50 pages, how many of those pages are actually useful opportunities?"**
+
+That makes Precision@50 a useful metric for this decision-support task.
+
+---
+
+# 🧠 Machine-Learning Workflow
+
+The project follows a transparent pipeline:
+
+```text
+                    FlyRank Search Data
+                            │
+                            ▼
+                  Data Preparation
+                            │
+                            ▼
+                  Feature Engineering
+                            │
+                            ▼
+                  Baseline Scoring
+                            │
+                            ▼
+                   Model Training
+                            │
+                            ▼
+                     Evaluation
+                            │
+                            ▼
+                 Ranked Opportunities
+                            │
+                            ▼
+                Content Refresh Queue
+                            │
+                            ▼
+             V2 Natural-Language Agent
+                            │
+                            ▼
+                    Human Decision
+```
+
+The important design principle is that the conversational layer sits **on top of the analytical workflow**.
+
+The ML pipeline generates the evidence.
+
+The agent makes that evidence easier to explore.
+
+---
+
+# 🔬 Pipeline Scripts
+
+The main pipeline is implemented in `scripts/`.
+
+| Script                      | Purpose                                                        |
+| --------------------------- | -------------------------------------------------------------- |
+| `01_prepare_features.py`    | Cleans data, prepares features, and defines the modeling frame |
+| `02_baseline_score.py`      | Creates a transparent baseline prioritization score            |
+| `03_train_model.py`         | Trains the machine-learning models                             |
+| `04_evaluate_and_export.py` | Evaluates the model and exports ranked results                 |
+| `05_build_pdf_report.py`    | Builds a shareable PDF report                                  |
+| `ml_utils.py`               | Shared utilities used by the pipeline                          |
+| `run_all.py`                | Runs the complete workflow                                     |
+
+The overall workflow is:
+
+```text
+01_prepare_features
+        ↓
+02_baseline_score
+        ↓
+03_train_model
+        ↓
+04_evaluate_and_export
+        ↓
+05_build_pdf_report
+```
+
+---
+
+# 🤖 V2 — Natural-Language Agent
+
+V2 adds a natural-language interaction layer over the existing ML outputs.
+
+Instead of manually opening the generated CSV and searching through rows, a user can ask questions such as:
+
+```text
+What are the top content opportunities?
+```
+
+```text
+Which pages should we refresh first?
+```
+
+```text
+Explain the highest-priority opportunities.
+```
+
+```text
+What does the ranked refresh queue contain?
+```
+
+The goal of the agent is to make the analytical results more accessible to a non-technical user.
+
+### Important design choice
+
+The agent does **not** replace the machine-learning pipeline.
+
+The architecture remains:
+
+```text
+Search data
+    ↓
+ML pipeline
+    ↓
+Ranked output
+    ↓
+Agent
+    ↓
+Natural-language answer
+```
+
+This keeps the underlying analysis reproducible and allows the generated results to be inspected independently of the conversational interface.
+
+---
+
+# 📁 Repository Structure
+
+```text
+flyrank-ml-work/
+│
+├── README.md
+├── requirements.txt
+│
+├── data/
+│   └── raw/
+│
+├── docs/
+│   ├── ml-core-foundation-framework.md
+│   └── ml-intern-dataset-and-lane-guide.md
+│
+├── notebooks/
+│   ├── 01_first_look_and_discovery.ipynb
+│   ├── 02_your_first_readable_model.ipynb
+│   └── 03_working_with_the_full_release.ipynb
+│
+├── outputs/
+│   ├── model_report.md
+│   └── refresh_queue_sample.csv
+│
+├── scripts/
+│   ├── 01_prepare_features.py
+│   ├── 02_baseline_score.py
+│   ├── 03_train_model.py
+│   ├── 04_evaluate_and_export.py
+│   ├── 05_build_pdf_report.py
+│   ├── ml_utils.py
+│   └── run_all.py
+│
+├── skills/
+│   └── README.md
+│
+├── submission/
+│   ├── README.md
+│   └── paper_url.txt
+│
+└── work/
+    ├── README.md
+    └── capstone_report_template.md
+```
+
+---
+
+# 📂 Important Files
+
+### `notebooks/`
+
+The initial FlyRank learning and discovery notebooks.
+
+They cover the early stages of the internship workflow, including:
+
+* initial data exploration
+* first readable models
+* working with the larger data release
+
+### `scripts/`
+
+The reproducible reference pipeline used to prepare data, create a baseline, train models, evaluate results, and generate outputs.
+
+### `outputs/`
+
+Generated project artifacts.
+
+The repository currently includes:
+
+```text
+model_report.md
+refresh_queue_sample.csv
+```
+
+The refresh queue sample provides a concrete example of the ranked output produced by the workflow.
+
+### `work/`
+
+The workspace for the internship's applied work and capstone materials.
+
+### `submission/`
+
+Submission-specific materials, including the submission README and research-paper URL.
+
+### `docs/`
+
+Reference material covering the ML framework, dataset, lane guidance, and internship workflow.
+
+---
+
+# ⚡ Quickstart
+
+## 1. Clone the repository
 
 ```bash
-git clone <this-repo-url>
-cd flyrank-ml-internship-starter
-pip install -r requirements.txt          # or: uv pip install -r requirements.txt
+git clone https://github.com/QuratulainAzhar22/flyrank-ml-work.git
+cd flyrank-ml-work
+```
+
+## 2. Create a virtual environment
+
+### Windows
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### macOS / Linux
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+## 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Run the pipeline
+
+```bash
 python scripts/run_all.py
 ```
 
-That runs the whole pipeline on the bundled sample and writes results to `outputs/`.
+The pipeline prepares the data, creates the baseline, trains the model, evaluates the results, and generates the project outputs.
 
 ---
 
-## What you get
+# 💻 Google Colab
 
-| Path | What it is |
-|---|---|
-| `notebooks/` | Week 1–2 **first-win notebooks** (Colab-ready). Start here. |
-| `scripts/01–05` + `run_all.py` | The runnable reference pipeline: prepare → baseline → train → evaluate → PDF. |
-| `data/raw/content_refresh_anonymized.csv` | The anonymized starter dataset (~30k pages). |
-| `outputs/` | Example outputs so you can see the **target shape** (`model_report.md`, `refresh_queue_sample.csv`, `charts/`). |
-| `work/` | **Your space.** Lane experiments and your capstone live here — see `work/README.md`. |
-| `docs/` | The core docs + the data dictionary (see below). |
+The initial notebooks can also be opened and executed through Google Colab.
 
-### Read these (in `docs/`)
+### Notebook 1 — First Look & Discovery
 
-1. **`ml-core-foundation-framework.md`** — the first-principles map of ML as a whole system. The backbone of the live sessions.
-2. **`ml-intern-dataset-and-lane-guide.md`** — how to use the data safely, the capstone workflow, and the analysis "lanes" you can pick from.
-3. **`intern-free-tooling-guide.md`** — the zero-budget tool stack (Python, Colab, free AI assistants). You never need to pay for anything.
-4. **`data-dictionary.md`** — all 44 columns: meaning, scale, and gotchas. Keep it open while you work.
+[Open `01_first_look_and_discovery.ipynb` in Colab](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/notebooks/01_first_look_and_discovery.ipynb?flush_cache=true)
+
+### Notebook 2 — First Readable Model
+
+[Open `02_your_first_readable_model.ipynb` in Colab](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/notebooks/02_your_first_readable_model.ipynb?flush_cache=true)
+
+### Notebook 3 — Full Release
+
+[Open `03_working_with_the_full_release.ipynb` in Colab](https://colab.research.google.com/github/QuratulainAzhar22/flyrank-ml-work/blob/main/notebooks/03_working_with_the_full_release.ipynb?flush_cache=true)
 
 ---
 
-## The pipeline (what `run_all.py` does)
+# 📈 Ranked Refresh Queue
+
+One of the main outputs is:
 
 ```text
-01_prepare_features.py   clean + build the feature vector, define the label
-02_baseline_score.py     a transparent hand-rule "fix this first" score
-03_train_model.py        logistic regression, decision tree, random forest (client-holdout split)
-04_evaluate_and_export.py  ranked queue + charts + Markdown report
-05_build_pdf_report.py   a shareable PDF summary
+outputs/refresh_queue_sample.csv
 ```
 
-On the bundled sample, the learned model clearly beats the hand-written rule at picking the right
-pages to review first (**Precision@50 ≈ 0.24 → 0.74**; the model number can land 0.68–0.74
-depending on library versions — the ~3x lift is the point). The notebooks compute these numbers
-live, so they always reflect the current data and environment.
+The sample contains:
 
-**Teaching point:** the model is the capstone, but the *workflow* is the lesson —
-`problem framing → data cleaning → baseline → first model → evaluation → explainable recommendation`.
+```text
+200 rows × 28 columns
+```
 
----
+Important ranking fields include:
 
-## Data safety (read `DATA_USE.md`)
+```text
+final_rank
+content_id
+```
 
-- Only the small **anonymized** CSV ships here — no client names, domains, URLs, titles, or keywords.
-- **Never** add raw private client data to this repo or your fork. Need more data? Request an approved
-  release from your mentor — never export it yourself.
-- Don't paste client data into third-party AI tools.
-- Frame every result as **observed / measured / directional / decision-support** — never
-  "I predicted Google's algorithm."
+along with the feature and scoring information used to describe each opportunity.
 
-The `.gitignore` blocks datasets by default, and CI fails any commit that includes a dataset.
+The purpose of this output is to transform model results into a practical queue that can be reviewed by an SEO or content team.
 
 ---
 
-## Assignments & schedule
+# 🧪 Evaluation Philosophy
 
-Weekly assignments, live events, and the capstone live on **your portal board** (your
-enrollment email has your access link). This repo is the shared technical foundation they all
-build on — and the `skills/` folder here is the instruction library for your AI assistant
-(start at [skills/README.md](skills/README.md)).
+The project emphasizes evaluation based on the **actual decision the system is intended to support**.
 
-**First time with GitHub?** You need exactly four things (full walkthrough: [SETUP.md](SETUP.md)):
-1. A free account at github.com.
-2. Your own copy of this repo: **Use this template → Create a new repository** → public.
-   (One click — brings the notebooks, `work/`, and the CI leak-guard with it.)
-3. In Colab: *File → Save a copy in GitHub* — opened from your copy's badges, the dialog is
-   already pre-filled with your repo and path, so it's just OK (Colab handles auth).
-4. That's your submission repo — share its **github.com/you/your-repo** URL with Assignment 1
-   (never a colab.research.google.com or drive.google.com link).
+Rather than focusing only on generic classification metrics, the workflow asks:
+
+> If a team can only review a limited number of pages, does the model put useful opportunities near the top?
+
+This is why ranking-oriented evaluation such as **Precision@50** is important.
+
+The project also compares the learned model against a transparent baseline.
+
+This provides a useful sanity check:
+
+```text
+Simple rule
+    ↓
+How well does it prioritize?
+
+ML model
+    ↓
+Does learning improve the prioritization?
+```
+
+The model is valuable only if it improves the decision being supported.
 
 ---
 
-*Track leads: Mirza Ašćerić (ML) · Hole (data engineering). Code under MIT (see `LICENSE`); data under `DATA_USE.md`.*
+# 🛡️ Data Safety
+
+This project uses anonymized FlyRank data.
+
+The repository should not contain:
+
+* private client information
+* client names
+* private domains
+* private URLs
+* private keywords
+* credentials
+* confidential exports
+
+Do not add private client data to this repository.
+
+Do not paste private client data into third-party AI tools.
+
+Results should be described carefully as:
+
+* observed
+* measured
+* directional
+* decision-support
+
+The project does **not** claim to predict Google's ranking algorithm.
+
+---
+
+# ⚠️ Limitations
+
+This system is a **decision-support tool**, not an autonomous SEO system.
+
+A high-ranked page is an opportunity for human review, not a guarantee that changing the page will improve its future search performance.
+
+There are several important limitations:
+
+1. Search performance can change for many reasons outside the modeled features.
+2. Historical relationships do not guarantee future outcomes.
+3. The ranked queue depends on the quality and availability of the underlying data.
+4. The natural-language agent depends on the generated project outputs being available and up to date.
+5. Human SEO judgment is still required before making content changes.
+
+The model therefore answers:
+
+> **"Which pages should we investigate first?"**
+
+rather than:
+
+> **"Which pages are guaranteed to improve?"**
+
+---
+
+# 🔮 Future Work
+
+Potential V3 improvements include:
+
+* connecting the agent to live search-performance data
+* adding richer explanations for individual rankings
+* adding confidence or uncertainty indicators
+* comparing performance before and after content refreshes
+* tracking whether recommended refreshes produce measurable gains
+* supporting more complex natural-language analytical questions
+* adding a lightweight web dashboard
+* introducing feedback from human reviewers into the prioritization workflow
+
+The most valuable next step would be closing the loop:
+
+```text
+Recommendation
+      ↓
+Content refresh
+      ↓
+Future search performance
+      ↓
+Measure outcome
+      ↓
+Improve prioritization
+```
+
+---
+
+# 📄 Research Paper
+
+The capstone research paper is the deeper explanation of the project's research question, methodology, analysis, results, and conclusions.
+
+The paper URL is maintained in:
+
+```text
+submission/paper_url.txt
+```
+
+---
+
+# 🎥 Demo
+
+The recommended demonstration follows this workflow:
+
+```text
+1. Introduce the search-intelligence problem
+2. Show the ML pipeline
+3. Show the generated refresh queue
+4. Demonstrate the V2 natural-language agent
+5. Explain the architecture
+6. State the limitation honestly
+```
+
+The key demonstration is showing that a user can move from:
+
+```text
+"Here is a large search dataset."
+```
+
+to:
+
+```text
+"Here are the pages the model recommends reviewing first."
+```
+
+and finally:
+
+```text
+"Let me ask the system why these opportunities matter."
+```
+
+---
+
+# 🏁 Final Takeaway
+
+This project combines **machine learning, search intelligence, ranking, and natural-language interaction** into one workflow.
+
+The core contribution is not simply training a model.
+
+It is building a reproducible path from:
+
+```text
+Raw search data
+      ↓
+Problem framing
+      ↓
+Feature engineering
+      ↓
+Baseline
+      ↓
+Machine learning
+      ↓
+Evaluation
+      ↓
+Ranked content opportunities
+      ↓
+Natural-language exploration
+      ↓
+Human action
+```
+
+The result is a practical system for helping content teams decide **what to review first**, while keeping the underlying evidence visible and the final decision with a human.
+
+---
+
+## FlyRank ML Internship
+
+**Track:** Machine Learning
+**Project:** Applied Search Intelligence
+**Focus:** Google Search Ranking & Content Refresh Prioritization
+**V2:** Natural-Language Agent
