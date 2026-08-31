@@ -559,6 +559,38 @@ The result is a practical system for helping content teams decide **what to revi
 
 ---
 
+## 📦 Final Submission Package
+
+This repository contains the complete final submission for my FlyRank ML Internship capstone.
+
+### Project
+
+* **Research Paper:** `submission/paper_url.txt`
+* **Capstone:** End-to-end applied Search Intelligence project
+* **Ranked Refresh Queue:** `outputs/refresh_queue_sample.csv`
+* **Model Report:** `outputs/model_report.md`
+* **V2 Natural-Language Agent:** Natural-language interface over the generated ranking outputs
+
+### Documentation & Demo
+
+* **README:** This document
+* **Demo Video:** https://youtu.be/ffVSCyl3M94
+
+### Final Reflection
+
+* **Retrospective:** 500–800 word reflection on the project, changes in approach, lessons learned, and future direction
+
+### Public Proof
+
+* **Build-in-Public Post:** http://youtube.com/post/Ugkxs5K5A8sHOMR8HBLGcnfLBy-YmYkWYPYy
+
+### Final Administrative Deliverables
+
+* **Hours Log:** Completed in the FlyRank portal
+* **Personal Site:** Published on the required FlyRank domain
+* **Final Review:** Submitted for human review and sign-off
+
+
 ## FlyRank ML Internship
 
 **Track:** Machine Learning
